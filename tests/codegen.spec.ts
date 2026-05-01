@@ -1,11 +1,13 @@
 import test, { expect } from "@playwright/test";
+import {HomePage} from "../pom/pages/HomePage";
 
 test.describe('CodeGen Sign In', () => {
-
+let homePage: HomePage
     test.beforeEach(async ({page})=> {
         await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
         await page.getByRole('button', { name: 'Sign In' }).click();
-    
+        const homePage = new HomePage(page)
+        await homePage.openSignInForm();
     })
 
     test('Successful Sign in', async ({page}) => {
