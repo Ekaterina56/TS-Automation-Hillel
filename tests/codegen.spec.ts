@@ -1,55 +1,76 @@
 import test, { expect } from "@playwright/test";
 import {HomePage} from "../pom/pages/HomePage";
+import { SighInForm } from "../pom/forms/SignInForm";
+import { GaragePage } from "../pom/pages/GaragePage";
+import { testUser1 } from "../test-data/validusers";
+import { generateRandomEmail, generateRandomPassword, generateWrongEmailFormat } from "../utils/data/credentials";
+
 
 test.describe('CodeGen Sign In', () => {
-let homePage: HomePage
+let homePage: HomePage;
+let signInForm: SighInForm;
+let garagePage: GaragePage
+
     test.beforeEach(async ({page})=> {
-        await page.goto('https://guest:welcome2qauto@qauto.forstudy.space/');
-        await page.getByRole('button', { name: 'Sign In' }).click();
-        const homePage = new HomePage(page)
+         homePage = new HomePage(page);
+         signInForm = new SighInForm (page)
+         garagePage = new GaragePage(page)
+        await homePage.openPage();
         await homePage.openSignInForm();
     })
 
-    test('Successful Sign in', async ({page}) => {
-      await page.getByRole('textbox', { name: 'Email' }).fill('nekatit56@gmail.com');
-      await page.getByRole('textbox', { name: 'Password' }).fill('Kate12345678');
-      await page.getByRole('button', { name: 'Login' }).click();
-      await expect(page.getByRole('heading', { name: 'Garage' })).toBeVisible();
+    test('Successful Sign in', async () => {
+    //   await page.getByRole('textbox', { name: 'Email' }).fill('nekatit56@gmail.com');
+    //   await page.getByRole('textbox', { name: 'Password' }).fill('Kate12345678');
+    //   await page.getByRole('button', { name: 'Login' }).click();
+        await signInForm.sighInWithCredentials(testUser1.email, testUser1.password)
+        await expect(garagePage.pageHeading).toContainText('Garage');
 });
 
     
 
-     test('Sing in with empty email field', async ({page}) => {
-         await page.getByRole('textbox', { name: 'Email' }).click();
-         await page.getByRole('textbox', { name: 'Password' }).click();
-         await expect(page.getByText('Email required')).toBeVisible();
+     test('Sing in with empty email field', async () => {
+        //  await page.getByRole('textbox', { name: 'Email' }).click();
+        await signInForm.triggerErrorOnField ('email')
+        //  await page.getByRole('textbox', { name: 'Password' }).click();
+        //  await expect(page.getByText('Email required')).toBeVisible();
+        await expect (signInForm.emptyEmailMessage).toBeVisible();
         
     })
 
-       test('Sing in with empty password field', async ({page}) => {
-            await page.getByRole('textbox', { name: 'Password' }).click(); 
-            await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
-            await expect(page.getByText('Password required')).toBeVisible();
+       test('Sing in with empty password field', async () => {
+            // await page.getByRole('textbox', { name: 'Password' }).click(); 
+            // await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
+            await signInForm.triggerErrorOnField ('password')
+            // await expect(page.getByText('Password required')).toBeVisible();
+            await expect (signInForm.emptyPasswordMessage).toBeVisible();
         
     })
 
-        test('Sing in with incorrect email', async ({page}) => {
+        test('Sing in with incorrect email', async () => {
         
-            await page.getByRole('textbox', { name: 'Email' }).fill('test');
-            await page.getByRole('textbox', { name: 'Password' }).click();
-            await expect(page.getByText('Email is incorrect')).toBeVisible();
-            await page.getByText('Email is incorrect').click();
+            // await page.getByRole('textbox', { name: 'Email' }).fill('test');
+            // await page.getByRole('textbox', { name: 'Password' }).click();
+
+            await signInForm.enterEmail(generateWrongEmailFormat());
+            await signInForm.triggerErrorOnField('email')
+            // await expect(page.getByText('Email is incorrect')).toBeVisible();
+            await expect (signInForm.incorrectEmailMessage).toBeVisible();
+            
         
     })
 
-        test('Sing in with wrong credentials', async ({page}) => {
+        test('Sing in with wrong credentials', async () => {
         
-            await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
-            await page.getByRole('textbox', { name: 'Password' }).fill('12345678');
-            await page.getByRole('button', { name: 'Login' }).click();
-            await expect(page.getByText('Wrong email or password')).toBeVisible();
+            // await page.getByRole('textbox', { name: 'Email' }).fill('test@test.com');
+            // await page.getByRole('textbox', { name: 'Password' }).fill('12345678');
+            await signInForm.sighInWithCredentials(generateRandomEmail(), generateRandomPassword())
+            // await page.getByRole('button', { name: 'Login' }).click();
+            await signInForm.clickOnLoginButton();
+            await expect(signInForm.wrongSingInCredentials).toBeVisible();
         
     })
+
 
 })
 
