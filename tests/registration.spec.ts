@@ -2,15 +2,16 @@ import test, { expect } from "@playwright/test";
 import { SignUpForm } from "../pom/forms/SignUpForm";
 import { HomePage } from "../pom/pages/HomePage";
 import { GaragePage } from "../pom/pages/GaragePage";
+import {testUser2} from "../test-data/validusers";
+import { generateCirillicName, genericLessLettersName, genericMoreLettersName } from "../utils/data/credentials";
 
+
+test.describe('Sing Up', async () => {
+    // email = `aqa-test+${Date.now()}@gmail.com`
  let email: string;
  let signUpForm: SignUpForm
  let homePage: HomePage
  let garagePage: GaragePage
-
-test.describe('Sing Up', async () => {
-
-    email = `aqa-test+${Date.now()}@gmail.com`
 
     test.beforeEach(async ({page})=> {
          signUpForm  = new SignUpForm (page)
@@ -19,19 +20,20 @@ test.describe('Sing Up', async () => {
 
          await homePage.openPage()
          await homePage.openSignUpForm()
+        await expect (signUpForm.viewSignUpForm).toBeVisible();
 
-        // await page.goto("")
-
+         // await page.goto("")
         // await page.locator('.hero-descriptor_btn').click();
         // await expect (page.locator(".modal-title")).toBeVisible();
-        await expect (signUpForm.viewSignUpForm).toBeVisible();
     
     })
 
   
 
     test ('Successful Sing Up', async ({page}) => {
-        // await page.locator('#signupName').click();
+        await signUpForm.enterSingUpValidCredentials (testUser2.name, testUser2.lastName, testUser2.email, testUser2.password,testUser2.repeatPassword,)
+        await expect(signUpForm.openGaragePage).toBeVisible();
+           // await page.locator('#signupName').click();
         // await page.locator('#signupName').fill('Katerynatest');
         // await page.locator('#signupLastName').click();
         // await page.locator('#signupLastName').fill('Martynovatest');
@@ -42,16 +44,14 @@ test.describe('Sing Up', async () => {
         // await page.locator("#signupRepeatPassword").click();
         // await page.locator("#signupRepeatPassword").fill('Kate12345678');
         // await page.locator ('div.modal-footer .btn-primary').click()
-        await signUpForm.enterSingUpValidCredentials ('Kateryna', 'TestTest', 'test@testest.com', 'Kate1245678','Kate12345678')
-        await expect(signUpForm.openGaragePage).toBeVisible();
 
     });
 
       test (' Sing Up with cyrillic Name ', async ({page}) => {
         await page.locator('#signupName').click();
-        await page.locator('#signupName').fill('Рпаотр');
-        await page.locator('#signupLastName').click();
-        await expect (page.getByText ("Name is invalid")).toBeVisible();
+        await signUpForm.enterSingUpName(generateCirillicName());
+        await signUpForm.enterSignUpLastName(testUser2.lastName);
+        await expect (signUpForm.checkInvalidName).toBeVisible();
 
     });
 

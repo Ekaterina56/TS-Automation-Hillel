@@ -9,6 +9,8 @@ export class SignUpForm extends BasePage {
     private readonly signUpRepeatPasswordField: Locator = this.page.locator("#signupRepeatPassword")
     private readonly signUpButton: Locator =this.page.locator ('div.modal-footer .btn-primary');
     public readonly viewSignUpForm: Locator = this.page.locator(".modal-title");
+    public readonly openGaragePage: Locator = this.page.locator('div.panel-page');
+    public readonly checkInvalidName: Locator =this.page.getByText ("Name is invalid");
 
 
     async enterSingUpName(name: string) {
@@ -44,8 +46,6 @@ export class SignUpForm extends BasePage {
         await this.clickOnSignUpButton();
 
 }
- async openSignUpForm (){
-    await this.viewSignUpForm.toBeVisible()
- }
+
 
 }
