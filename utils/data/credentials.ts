@@ -12,3 +12,7 @@ export function generateRandomPassword() {
     return `Pass!${Date.now()}`
 
 }
+
+export function generateEmailForRegistration (){
+    return `testregemail${Date.now()}@gmail.com`
+}

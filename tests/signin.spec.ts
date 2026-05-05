@@ -6,7 +6,7 @@ import { testUser1 } from "../test-data/validusers";
 import { generateRandomEmail, generateRandomPassword, generateWrongEmailFormat } from "../utils/data/credentials";
 
 
-test.describe('CodeGen Sign In', () => {
+test.describe('CodeGen Sign In with POM', () => {
 let homePage: HomePage;
 let signInForm: SighInForm;
 let garagePage: GaragePage

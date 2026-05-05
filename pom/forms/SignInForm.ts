@@ -1,28 +1,15 @@
-import {Locator, Page} from '@playwright/test'
+import {Locator} from '@playwright/test'
+import { BaseForms } from './BaseForms';
 
-export class SighInForm {
+export class SighInForm extends BaseForms{
 
-private readonly page: Page;
-private readonly emailField: Locator;
-private readonly passwordField: Locator;
-private readonly loginButton: Locator;
-public readonly emptyEmailMessage :Locator;  
-public readonly emptyPasswordMessage: Locator; 
-public readonly incorrectEmailMessage: Locator;
-public readonly wrongSingInCredentials: Locator;
-
-    constructor(page: Page) {
-        this.page = page
-        this.emailField = page.getByRole('textbox', { name: 'Email' });
-        this.passwordField = page.getByRole('textbox', { name: 'Password' });
-        this.loginButton = page.getByRole('button', { name: 'Login' });
-        this.emptyEmailMessage = page.getByText('Email required');
-        this.emptyPasswordMessage = page.getByText('Password required');
-        this.incorrectEmailMessage = page.getByText('Email is incorrect');
-        this.wrongSingInCredentials = page.getByText('Wrong email or password');
-
-        
-    }
+private readonly emailField: Locator = this.page.getByRole('textbox', { name: 'Email' });
+private readonly passwordField: Locator = this.page.getByRole('textbox', { name: 'Password' });
+private readonly loginButton: Locator = this.page.getByRole('button', { name: 'Login' });
+public readonly emptyEmailMessage :Locator = this.page.getByText('Email required');  
+public readonly emptyPasswordMessage: Locator = this.page.getByText('Password required'); 
+public readonly incorrectEmailMessage: Locator = this.page.getByText('Email is incorrect');
+public readonly wrongSingInCredentials: Locator = this.page.getByText('Wrong email or password');
 
     async sighInWithCredentials (email: string, password: string) {
         //   await this.emailField.fill(email);

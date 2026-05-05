@@ -3,6 +3,7 @@ import { BasePage } from './BasePage';
 
 export class HomePage extends BasePage {
     private readonly signInButton: Locator = this.page.getByRole('button', { name: 'Sign In' });
+    private readonly signUpButton: Locator = this.page.locator("#signupRepeatPassword");
     
 
     async openPage() {
@@ -12,5 +13,10 @@ export class HomePage extends BasePage {
 
     async openSignInForm () {
         await this.signInButton.click()
+    }
+
+    async openSignUpForm(){
+        await this.signUpButton.click();
+
     }
 }

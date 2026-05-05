@@ -1,34 +1,49 @@
 import test, { expect } from "@playwright/test";
+import { SignUpForm } from "../pom/forms/SignUpForm";
+import { HomePage } from "../pom/pages/HomePage";
+import { GaragePage } from "../pom/pages/GaragePage";
 
  let email: string;
+ let signUpForm: SignUpForm
+ let homePage: HomePage
+ let garagePage: GaragePage
 
 test.describe('Sing Up', async () => {
 
     email = `aqa-test+${Date.now()}@gmail.com`
 
     test.beforeEach(async ({page})=> {
-        await page.goto("")
+         signUpForm  = new SignUpForm (page)
+         homePage = new HomePage (page)
+         garagePage = new GaragePage(page)
 
-        await page.locator('.hero-descriptor_btn').click();
-        await expect (page.locator(".modal-title")).toBeVisible();
+         await homePage.openPage()
+         await homePage.openSignUpForm()
+
+        // await page.goto("")
+
+        // await page.locator('.hero-descriptor_btn').click();
+        // await expect (page.locator(".modal-title")).toBeVisible();
+        await expect (signUpForm.viewSignUpForm).toBeVisible();
     
     })
 
   
 
     test ('Successful Sing Up', async ({page}) => {
-        await page.locator('#signupName').click();
-        await page.locator('#signupName').fill('Katerynatest');
-        await page.locator('#signupLastName').click();
-        await page.locator('#signupLastName').fill('Martynovatest');
-        await page.locator('#signupEmail').click();
-        await page.locator('#signupEmail').fill(email);
-        await page.locator("#signupPassword").click();
-        await page.locator("#signupPassword").fill ('Kate12345678');
-        await page.locator("#signupRepeatPassword").click();
-        await page.locator("#signupRepeatPassword").fill('Kate12345678');
-        await page.locator ('div.modal-footer .btn-primary').click()
-        await expect(page.locator('div.panel-page')).toBeVisible();
+        // await page.locator('#signupName').click();
+        // await page.locator('#signupName').fill('Katerynatest');
+        // await page.locator('#signupLastName').click();
+        // await page.locator('#signupLastName').fill('Martynovatest');
+        // await page.locator('#signupEmail').click();
+        // await page.locator('#signupEmail').fill(email);
+        // await page.locator("#signupPassword").click();
+        // await page.locator("#signupPassword").fill ('Kate12345678');
+        // await page.locator("#signupRepeatPassword").click();
+        // await page.locator("#signupRepeatPassword").fill('Kate12345678');
+        // await page.locator ('div.modal-footer .btn-primary').click()
+        await signUpForm.enterSingUpValidCredentials ('Kateryna', 'TestTest', 'test@testest.com', 'Kate1245678','Kate12345678')
+        await expect(signUpForm.openGaragePage).toBeVisible();
 
     });
 
